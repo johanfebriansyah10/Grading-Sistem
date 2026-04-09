@@ -5,16 +5,17 @@
  */
 
 /**
- * Menghitung prediksi skor siswa dengan regresi linier berganda.
- * Y = 15 + 0.5*X1 + 0.3*X2 + 0.2*X3
+ * Menghitung prediksi skor siswa dengan regresi linier berganda yang disempurnakan.
+ * Y = 15 + 0.3*Tugas + 0.2*UTS + 0.3*UAS + 0.2*Kehadiran
  */
-function hitungPrediksi($tugas, $uts, $attendance) {
+function hitungPrediksi($tugas, $uts, $uas, $attendance) {
     $a = 15;
-    $b1 = 0.5;
-    $b2 = 0.3;
-    $b3 = 0.2;
+    $b1 = 0.3; // Tugas
+    $b2 = 0.2; // UTS
+    $b3 = 0.3; // UAS
+    $b4 = 0.2; // Kehadiran
 
-    $Y = $a + ($b1 * $tugas) + ($b2 * $uts) + ($b3 * $attendance);
+    $Y = $a + ($b1 * $tugas) + ($b2 * $uts) + ($b3 * $uas) + ($b4 * $attendance);
     return round($Y, 2); 
 }
 

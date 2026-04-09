@@ -8,6 +8,7 @@ $totalStudents = $pdo->query("SELECT COUNT(*) FROM students")->fetchColumn();
 $totalTeachers = $pdo->query("SELECT COUNT(*) FROM teachers")->fetchColumn();
 $studentsAtRisk = $pdo->query("SELECT COUNT(*) FROM grades WHERE status = 'Berisiko'")->fetchColumn();
 $safeStudents = $pdo->query("SELECT COUNT(*) FROM grades WHERE status = 'Aman'")->fetchColumn();
+$totalSubjects = $pdo->query("SELECT COUNT(*) FROM subjects")->fetchColumn();
 
 require_once 'includes/header.php';
 require_once 'includes/sidebar.php';
@@ -43,11 +44,25 @@ $tanggal_indo = $hari[date('l')] . ', ' . date('d') . ' ' . $bulan[date('F')] . 
         <div class="col-md-3">
             <div class="card dashboard-card p-3">
                 <div class="d-flex align-items-center">
+                    <div class="bg-info text-dark rounded p-3 me-3 card-icon">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-0 small text-uppercase fw-bold">Total Mapel</p>
+                        <h3 class="fw-bold mb-0"><?= $totalSubjects ?></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card dashboard-card p-3">
+                <div class="d-flex align-items-center">
                     <div class="bg-success text-white rounded p-3 me-3 card-icon">
                         <i class="fa-solid fa-check-circle"></i>
                     </div>
                     <div>
-                        <p class="text-muted mb-0 small text-uppercase fw-bold">Siswa Aman</p>
+                        <p class="text-muted mb-0 small text-uppercase fw-bold">Penilaian Aman</p>
                         <h3 class="fw-bold mb-0"><?= $safeStudents ?></h3>
                     </div>
                 </div>
@@ -61,22 +76,8 @@ $tanggal_indo = $hari[date('l')] . ', ' . date('d') . ' ' . $bulan[date('F')] . 
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div>
-                        <p class="text-muted mb-0 small text-uppercase fw-bold">Berisiko</p>
+                        <p class="text-muted mb-0 small text-uppercase fw-bold">Penilaian Berisiko</p>
                         <h3 class="fw-bold mb-0"><?= $studentsAtRisk ?></h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card dashboard-card p-3">
-                <div class="d-flex align-items-center">
-                    <div class="bg-info text-dark rounded p-3 me-3 card-icon">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                    </div>
-                    <div>
-                        <p class="text-muted mb-0 small text-uppercase fw-bold">Total Guru</p>
-                        <h3 class="fw-bold mb-0"><?= $totalTeachers ?></h3>
                     </div>
                 </div>
             </div>
@@ -88,12 +89,12 @@ $tanggal_indo = $hari[date('l')] . ', ' . date('d') . ' ' . $bulan[date('F')] . 
         <div class="col-md-12">
             <div class="card border-0 shadow-sm p-4">
                 <h5 class="fw-bold mb-3"><i class="fa-solid fa-chart-bar text-primary me-2"></i>Informasi Model Prediksi</h5>
-                <p>Sistem ini menggunakan regresi linier berganda untuk memprediksi nilai akhir siswa berdasarkan tiga metrik utama:</p>
+                <p>Sistem ini menggunakan regresi linier berganda untuk memprediksi risiko per individu untuk masing-masing Mata Pelajaran (Mapel):</p>
                 <div class="bg-light p-3 rounded font-monospace" style="display:inline-block">
-                    <strong>Y = 15 + 0.5 &times; (Tugas) + 0.3 &times; (UTS) + 0.2 &times; (Kehadiran)</strong>
+                    <strong>Y = 15 + 0.3 &times; (Tugas) + 0.2 &times; (UTS) + 0.3 &times; (UAS) + 0.2 &times; (Kehadiran)</strong>
                 </div>
                 <ul class="mt-3 text-muted">
-                    <li>Jika prediksi nilai <code>Y</code> kurang dari KKM (Default: 70), siswa masuk ke status <strong>Berisiko</strong>.</li>
+                    <li>Jika prediksi nilai <code>Y</code> kurang dari KKM (Default: 70), siswa masuk ke status <strong>Berisiko</strong> pada mapel tersebut.</li>
                     <li>Jika <code>Y</code> &ge; KKM, siswa diprediksi <strong>Aman</strong>.</li>
                 </ul>
             </div>

@@ -31,7 +31,21 @@ CREATE TABLE IF NOT EXISTS teachers (
     subject VARCHAR(100) NOT NULL
 );
 
--- 4. KKM Table (Settings for Risk Threshold)
+-- 4. Subjects Table (Mapel)
+CREATE TABLE IF NOT EXISTS subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Insert default subjects
+INSERT INTO subjects (name) VALUES 
+('Bahasa Indonesia'),
+('Matematika'),
+('Bahasa Inggris'),
+('Ilmu Pengetahuan Alam')
+ON DUPLICATE KEY UPDATE name=name;
+
+-- 5. KKM Table (Settings for Risk Threshold)
 CREATE TABLE IF NOT EXISTS kkm (
     id INT AUTO_INCREMENT PRIMARY KEY,
     value FLOAT NOT NULL DEFAULT 70
@@ -41,14 +55,18 @@ CREATE TABLE IF NOT EXISTS kkm (
 INSERT INTO kkm (value) VALUES (70)
 ON DUPLICATE KEY UPDATE id=id;
 
--- 5. Grades Table with predictive scores
+-- 6. Grades Table with predictive scores per subject
 CREATE TABLE IF NOT EXISTS grades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
+    subject_id INT NOT NULL,
     tugas FLOAT NOT NULL DEFAULT 0,
     uts FLOAT NOT NULL DEFAULT 0,
+    uas FLOAT NOT NULL DEFAULT 0,
     attendance FLOAT NOT NULL DEFAULT 0,
     predicted_score FLOAT,
     status VARCHAR(20),
-    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    UNIQUE KEY uni_student_subject (student_id, subject_id)
 );

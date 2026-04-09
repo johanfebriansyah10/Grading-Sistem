@@ -3,12 +3,14 @@ require_once 'config.php';
 require_once 'functions.php';
 requireLogin();
 
-// Fetch grades
+// Fetch grades with subject
 $sql = "SELECT s.id as student_id, s.name, s.class, 
-               g.tugas, g.uts, g.attendance, g.predicted_score, g.status
+               sub.name as subject_name,
+               g.tugas, g.uts, g.uas, g.attendance, g.predicted_score, g.status
         FROM students s 
         INNER JOIN grades g ON s.id = g.student_id
-        ORDER BY g.predicted_score DESC";
+        INNER JOIN subjects sub ON sub.id = g.subject_id
+        ORDER BY s.class ASC, s.name ASC, sub.name ASC";
 $reports = $pdo->query($sql)->fetchAll();
 
 require_once 'includes/header.php';
@@ -17,7 +19,7 @@ require_once 'includes/sidebar.php';
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold mb-0">Laporan Penilaian & Risiko</h3>
+        <h3 class="fw-bold mb-0">Laporan Penilaian & Risiko (Per Mapel)</h3>
         <button class="btn btn-outline-success" onclick="window.print()">
             <i class="fa-solid fa-print me-1"></i> Cetak Laporan
         </button>
@@ -30,8 +32,10 @@ require_once 'includes/sidebar.php';
                     <tr>
                         <th class="ps-4">Siswa</th>
                         <th>Kelas</th>
+                        <th>Mata Pelajaran</th>
                         <th>Tugas</th>
                         <th>UTS</th>
+                        <th>UAS</th>
                         <th>Kehadiran</th>
                         <th>Prediksi Skor (Y)</th>
                         <th class="pe-4">Status Risiko</th>
@@ -42,8 +46,10 @@ require_once 'includes/sidebar.php';
                     <tr>
                         <td class="ps-4 fw-bold"><?= htmlspecialchars($row['name']) ?></td>
                         <td><span class="badge bg-secondary"><?= htmlspecialchars($row['class']) ?></span></td>
+                        <td class="fw-bold text-info"><?= htmlspecialchars($row['subject_name']) ?></td>
                         <td><?= $row['tugas'] ?></td>
                         <td><?= $row['uts'] ?></td>
+                        <td><?= $row['uas'] ?></td>
                         <td><?= $row['attendance'] ?></td>
                         <td class="fw-bold text-primary"><?= $row['predicted_score'] ?></td>
                         <td class="pe-4">
@@ -58,7 +64,7 @@ require_once 'includes/sidebar.php';
                     
                     <?php if (count($reports) === 0): ?>
                     <tr>
-                        <td colspan="7" class="text-center py-4 text-muted">Belum ada siswa yang dinilai.</td>
+                        <td colspan="9" class="text-center py-4 text-muted">Belum ada nilai siswa yang diinputkan.</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>

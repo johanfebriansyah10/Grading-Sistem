@@ -35,6 +35,11 @@
             </h6>
         </li>
         <li class="nav-item">
+            <a href="subjects.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'subjects.php' ? 'active' : '' ?>">
+                <i class="fa-solid fa-book"></i> Mata Pelajaran
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="teachers.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'teachers.php' ? 'active' : '' ?>">
                 <i class="fa-solid fa-chalkboard-user"></i> Manajemen Guru
             </a>
